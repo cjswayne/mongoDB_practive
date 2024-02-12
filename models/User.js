@@ -27,7 +27,7 @@ const userSchema = new Schema(
 
 
 userSchema.pre('save', async function(next){ // if u don't call next it doesn't save
-    if(!this.isNew){
+    if(this.isNew){
         this.password = await hash(this.password, 10);
     }
 
