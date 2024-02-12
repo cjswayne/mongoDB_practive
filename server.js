@@ -1,16 +1,20 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 
 const PORT = process.env.PORT || 3333;
+const connection = require("./config/connection");
 
-const connection = require('./config/connection')
+const { user_routes } = require("./routes/api");
 
-app.get('/api/users', async(req, res) => {
-    const db = await connection;
-    const users = await db.collection('users').find().toArray();
-    res.json(users);
-})
+// middleware
+app.use(express.json());
 
-app.listen(PORT, () => {
-    console.log('server started on port', PORT)
-})
+// load routes
+app.use("/api", [user_routes]);
+
+// const user = await User.create(req.body);
+connection.on("open", () => {
+  app.listen(PORT, () => {
+    console.log("server started on port", PORT);
+  });
+});

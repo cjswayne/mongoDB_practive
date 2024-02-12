@@ -1,11 +1,4 @@
-const { MongoClient, ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/first_day_db');
 
-
-const url = 'mongodb://localhost:27017'
-const client = new MongoClient(url);
-
-module.exports = client.connect()
-    .then(() => {
-        return client.db('first_day_db'); 
-    })
-    
+module.exports = mongoose.connection;
