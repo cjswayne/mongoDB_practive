@@ -11,8 +11,6 @@ app.use(express.json());
 
 // load routes
 app.use("/api", [user_routes]);
-// drop users
-// const user = await User.create(req.body);
 connection.on("open", () => {
   app.listen(PORT, () => {
     console.log("server started on port", PORT);

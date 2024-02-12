@@ -1,6 +1,6 @@
 function handleRouteError(err, res) {
 
-    console.log(err.errors);
+    console.log('errors', err);
 
     if (err.code === 11000) {
         return res.json({
@@ -9,7 +9,7 @@ function handleRouteError(err, res) {
         });
       }
   
-      console.log(err.errors);
+      console.log('errors', err.errors);
 
       if(err.kind === 'ObjectId') {
         return res.status(404).json({

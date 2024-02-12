@@ -1,12 +1,11 @@
 const { model, Schema } = require('mongoose');
-const { hash, bcrypt } = require('bcrypt');
+const { hash, compare } = require('bcrypt');
 
 
 const userSchema = new Schema(
     {
         email:{
             type: String,
-            // 
             required:[true, 'You must enter a password, you entered {VALUE}'],
             unique: true, // CAVEAT must be either new or unique if unique is true
             validate:{
@@ -19,7 +18,7 @@ const userSchema = new Schema(
             type: String,
             required: [true,'You must enter a password'],
             minLength:[6, 'Your Password must be at least 6 characters in length'],
-            select:false
+            // select:false
         }
     }, 
 
@@ -27,7 +26,7 @@ const userSchema = new Schema(
 
 
 userSchema.pre('save', async function(next){ // if u don't call next it doesn't save
-    if(this.isNew){
+    if(this.isNew || this.isModified('password')){
         this.password = await hash(this.password, 10);
     }
 
@@ -35,6 +34,7 @@ userSchema.pre('save', async function(next){ // if u don't call next it doesn't 
 })
 
 userSchema.methods.validatePass = async function(formPassword) {
+    console.log(formPassword, this.password)
     const is_valid = await compare(formPassword, this.password);
 
     return is_valid
