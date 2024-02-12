@@ -38,6 +38,10 @@ router.get('/users/:user_id', async (req, res) => {
         const user = await User.findById(req.params.user_id) // think about dry code, if we had to use req.params.id in other places
         // then youd put into a variable and use it in multiple places
 
+        if(!user) return res.status(404).json({
+            message:'User with ID not found'
+        })
+
         res.json(user);
     } catch (err) {
         handleRouteError(err, res);
@@ -66,6 +70,10 @@ router.put('/users/:user_id', async (req, res) => {
             const user = await User.findById(req.params.user_id); // getting user by id
             console.log('user', user)
 
+            if(!user) return res.status(404).json({
+                message:'User with ID not found'
+            })
+
             // using method we made in User.js to check if the password of the user is the same as the password
             // that was sent through req.body 
             const pass_valid = await user.validatePass(password); 
@@ -91,6 +99,23 @@ router.put('/users/:user_id', async (req, res) => {
 
     } catch (err) {
         handleRouteError(err, res);
+    }
+})
+
+router.delete('/users/:user_id', async(req, res) => {
+    try {
+        // const user = await User.findByIdAndUpdate(req.params.user_id)
+        const user = await User.findByIdAndDelete(req.params.user_id)
+
+
+        res.json({
+            message:'user deleted successfully',
+            user
+        })
+        
+    } catch (err) {
+        handleRouteError(err, res);
+        
     }
 })
 
